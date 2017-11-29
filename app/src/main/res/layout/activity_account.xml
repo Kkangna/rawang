@@ -39,10 +39,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Get User" />
-
-    <TextView
-        android:id="@+id/textview_result"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Result from Server" />
+        android:layout_height="200dp">
+        <TextView
+            android:id="@+id/textview_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Result from Server" />
+    </ScrollView>
 </LinearLayout>

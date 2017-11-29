@@ -4,22 +4,31 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static Application.AppCommon.awsURL;
 
@@ -33,7 +42,7 @@ public class AccountActivity extends AppCompatActivity {
     private EditText editTextID,edittextType, edittextEmail,edittextNickname;
     private TextView textViewResult;
     private Context mContext;
-    private URL url = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +60,8 @@ public class AccountActivity extends AppCompatActivity {
         buttonPostSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                HttpPostRequest postRequest = new HttpPostRequest();
+                postRequest.execute();
             }
         });
 
@@ -60,7 +70,6 @@ public class AccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 HttpGetRequest getRequest = new HttpGetRequest();
                 getRequest.execute();
-
             }
         });
     }
@@ -106,6 +115,61 @@ public class AccountActivity extends AppCompatActivity {
             catch(IOException e){
                 e.printStackTrace();
                 result = null;
+            }
+            return result;
+        }
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            textViewResult.setText(result);
+        }
+    }
+
+
+    public class HttpPostRequest extends AsyncTask<String, Void, String> {
+        public String REQUEST_METHOD = "POST";
+        public static final int READ_TIMEOUT = 15000;
+        public static final int CONNECTION_TIMEOUT = 15000;
+        @Override
+        protected String doInBackground(String... params){
+            String result;
+            String inputLine;
+            try {
+              //  ContentValues values = new ContentValues();
+                JSONObject values = new JSONObject();
+                values.put("id", editTextID.getText().toString());
+                values.put("type", edittextType.getText().toString());
+                values.put("email", edittextEmail.getText().toString());
+                values.put("nickname", edittextNickname.getText().toString());
+
+
+                //Create a URL object holding our url
+                URL myUrl = new URL(awsURL+"joinuser");
+                //Create a connection
+                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
+                //Set methods and timeouts
+                connection.setDoOutput(true);
+                connection.setInstanceFollowRedirects(false);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("charset", "utf-8");
+                connection.setUseCaches(false);
+
+
+                OutputStream  outputStream = connection.getOutputStream();
+
+                BufferedWriter  bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+                bufferedWriter.write(values.toString());
+                bufferedWriter.flush();
+
+                int statusCode = connection.getResponseCode();
+                result = "The status code is " + statusCode;
+            }
+            catch(IOException e){
+                result = "IO EXCEPTION";
+                e.printStackTrace();
+            } catch (JSONException e) {
+                result = "JSON EXCEPTION";
+                e.printStackTrace();
             }
             return result;
         }
