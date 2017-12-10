@@ -40,11 +40,22 @@
         android:text="Get User" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="150dp">
         <TextView
             android:id="@+id/textview_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Result from Server" />
     </ScrollView>
+
+    <Button
+        android:id="@+id/button_getRamen"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Get ramen" />
+
+    <ImageView
+        android:id="@+id/imageview_ramen"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 </LinearLayout>

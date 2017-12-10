@@ -1,0 +1,1 @@
+[{"id":1,"title":"sin","timer":300,"type":0,"description":null},{"id":2,"title":"진라면","timer":300,"type":0,"description":"순한맛"},{"id":3,"title":"육개장","timer":180,"type":1,"description":"육개장 사발면"},{"id":4,"title":"왕뚜껑","timer":180,"type":1,"description":"뚜껑 개커"}]
